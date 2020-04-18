@@ -7,7 +7,7 @@ import threading as th
 BUFFER_LENGTH = 10
 FORMAT = 'llHHI'
 EVENT_SIZE = struct.calcsize(FORMAT)
-OUT_FILE = "kb_out.txt"
+OUT_FILE = "kb_out.log"
 
 qwerty_map = {
     2: "1",

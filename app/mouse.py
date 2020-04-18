@@ -2,8 +2,9 @@ from Xlib import display
 import threading as th
 import os
 
-OUT_FILE = "mo_out.txt"
+OUT_FILE = "mo_out.log"
 
+# https://stackoverflow.com/questions/21850145/monitor-mouse-coordinates-in-real-time-in-linux
 class Mouse:
     def __init__(self, erase):
         if (erase == 'y'):
