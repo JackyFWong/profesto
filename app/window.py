@@ -43,10 +43,12 @@ def get_activityname():
 class Window:
     def __init__(self, erase):
         if (erase == 'y'):
-            open(OUT_FILE, "w").close()
+            open(OUT_FILE, "w+").close()
 
     def data_stream(self):
-        print("Thread {} online",format(th.current_thread().name))
-        print("---PID {}",format(os.getpid))
+        print(f"Thread {th.current_thread().name} online")
+        print(f"---PID {os.getpid}")
         while True:
-            print(get_activityname())
+            out_str = get_activityname()
+            with open(OUT_FILE, "a") as f:
+                f.write(out_str)

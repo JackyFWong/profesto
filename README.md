@@ -2,6 +2,8 @@
 Measures and visualizes computer productivity on Linux
 
 ## About the app
+STATUS = `incomplete`
+
 'Profesto' is what I got from Google Translate when I translated 'workday' to Latin.
 
 ## Dependencies
