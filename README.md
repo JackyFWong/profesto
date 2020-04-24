@@ -2,7 +2,7 @@
 Measures and visualizes computer productivity on Linux
 
 ## About the app
-STATUS = `incomplete`
+STATUS = `data collection complete, gui on the way`
 
 'Profesto' is what I got from Google Translate when I translated 'workday' to Latin.
 
@@ -28,9 +28,9 @@ kill [PID]
 ## Data gathered
 - Keyboard data > reading the file `/dev/eventX`, where X is the keyboard device number
 - Mouse position > `xlib`
-- Current active window > `xprop` and a lot of regular expressions
+- Current active window > `xprop` and regex
 - Computer system data > `psutil` and `platform`
 
 ## Other programs
-- `tkinter` for the GUI
+- `pyqt` for the GUI
 - `notify2` for notification popups

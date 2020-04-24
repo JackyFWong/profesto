@@ -1,5 +1,6 @@
 import json
 import threading as th
+import concurrent.futures as cf
 import os
 
 import keyboard
@@ -7,11 +8,6 @@ import mouse
 import system
 import window
 import gui
-
-def test(x):
-    print("Thread {} online",format(th.current_thread().name))
-    print("---PID {}",format(os.getpid()))
-    print(x)
 
 if __name__ == "__main__":
     x = input("Write over old data? (y/n) ")
@@ -23,20 +19,12 @@ if __name__ == "__main__":
     wn = window.Window(erase=x)
     dash = gui.Gui()
 
-    thread0 = th.Thread(target=test, name='main', args=(msg,))
-    thread1 = th.Thread(target=kb.data_stream, name='kb_in')
-    thread2 = th.Thread(target=mo.data_stream, name='mo_in')
-    thread3 = th.Thread(target=sy.data_stream, name='sy_in')
-    thread4 = th.Thread(target=wn.data_stream, name='wn_in')
-    thread5 = th.Thread(target=dash.test, name='dash_thread')
-
     try:
-        thread0.start()
-        #thread1.start()
-        thread2.start()
-        #thread3.start()
-        #thread4.start()
-        thread5.start()
+        with cf.ThreadPoolExecutor() as exe:
+            th1 = exe.submit(kb.data_stream)
+            th2 = exe.submit(mo.data_stream)
+            th3 = exe.submit(sy.data_stream)
+            th4 = exe.submit(wn.data_stream)
+            th5 = exe.submit(dash.test)
     except (KeyboardInterrupt, SystemExit):
-        print("Recieved keyboard interrupt, exiting...")
-        sys.exit()
+        exit()

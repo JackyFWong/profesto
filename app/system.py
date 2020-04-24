@@ -30,7 +30,7 @@ def syst_info():
         "==========CPU Information==========\n" +
         f"Physical cores: {psutil.cpu_count(logical=False)}\n" +
         f"Logical cores: {psutil.cpu_count(logical=True)}\n" +
-        f"Max freq: {cpufreq.max:.2f}Mhz\n")
+        f"Max freq: {cpufreq.max/1000:.2f}Ghz\n")
 
     # Mem info
     vmem = psutil.virtual_memory()
@@ -45,7 +45,7 @@ def syst_info():
 
 class System:
     def __init__(self, erase):
-        print(syst_info())
+        #print(syst_info())
         if (erase == 'y'):
             open(OUT_FILE, "w+").close()
 
@@ -62,33 +62,37 @@ class System:
         self.net_start_recv = self.net_io.bytes_recv
 
     def data_stream(self):
-        print(f"Thread {th.current_thread().name} online")
-        print(f"---PID {os.getpid()}")
+        """ Format:
+            {
+                core_per : [core0%, ..., coreN%], total_cpu_per : X%,
+                mem_usg : XGB, mem_per : X%, swap_usg : XGB, swap_per : X%,
+                disk_read : XGB, disk_write : XGB,
+                net_sent : XGB, net_recv : XGB,
+            }
+        """
         while True:
+            out_str = "{"
+            
             # CPU
-            out_str = "======\nCPU per core:\n"
+            out_str += "'core_per':["
             for i, percent in enumerate(psutil.cpu_percent(percpu=True)):
-                out_str = out_str + f"---Core {i}: {percent}%\n"
-            out_str = out_str + f"Total CPU: {psutil.cpu_percent()}%\n\n"
+                out_str += f"{percent},"
+            out_str += f"],'total_cpu_per':{psutil.cpu_percent()},"
 
-            # Memory
-            out_str = (out_str +
-                f"Mem used: {get_size(self.v_mem.used)} ({self.v_mem.percent}%)\n" +
-                f"Swap used: {get_size(self.swap.used)} ({self.swap.percent}%)\n\n")
+            # Mem
+            out_str += ( f"'mem_usg':{self.v_mem.used}," +
+                f"'mem_per':{self.v_mem.percent}," +
+                f"'swap_usg':{self.swap.used}," +
+                f"'swap_per':{self.swap.percent}," )
 
             # Disk
-            read = get_size(self.disk_io.read_bytes - self.disk_start_read)
-            write = get_size(self.disk_io.write_bytes - self.disk_start_write)
-            out_str = (out_str +
-                f"Total disk read: {read}\n" +
-                f"Total disk write: {write}\n\n")
+            out_str += ( f"'disk_read':{self.disk_io.read_bytes - self.disk_start_read}," +
+                f"'disk_write':{self.disk_io.write_bytes - self.disk_start_write}," )
 
             # Net
-            sent = get_size(self.net_io.bytes_sent - self.net_start_sent)
-            recv = get_size(self.net_io.bytes_recv - self.net_start_recv)
-            out_str = (out_str +
-                f"Total network sent: {sent}\n" +
-                f"Total network received: {recv}\n\n")
+            out_str += ( f"'net_sent':{self.net_io.bytes_sent - self.net_start_sent}," +
+                f"'net_recv':{self.net_io.bytes_recv - self.net_start_recv}" )
 
+            out_str += "}\n"
             with open(OUT_FILE, "a") as f:
                 f.write(out_str)
