@@ -9,6 +9,7 @@ STATUS = `data collection complete, gui on the way`
 ## Dependencies
 - python3-xlib
 - psutil
+- matplotlib (only version 3.0.3)
 
 ## Running the program
 ```
@@ -32,5 +33,4 @@ kill [PID]
 - Computer system data > `psutil` and `platform`
 
 ## Other programs
-- `pyqt` for the GUI
-- `notify2` for notification popups
+- `PySimpleGUI` for the GUI
