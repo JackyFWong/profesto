@@ -14,6 +14,7 @@ every (and I do mean every) interaction with the program.
 - python3-xlib
 - psutil
 - matplotlib (only version 3.0.3)
+- pysimplegui
 
 ## Installation for dependencies
 This will depend on your system. I use Fedora Linux.
@@ -21,6 +22,7 @@ This will depend on your system. I use Fedora Linux.
 dnf install python3-xlib
 pip3 install psutil
 pip3 install matplotlib==3.0.3
+pip3 install pysimplegui
 ```
 
 ## Running the program
